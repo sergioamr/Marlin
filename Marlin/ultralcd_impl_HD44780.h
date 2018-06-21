@@ -520,9 +520,9 @@ void lcd_printPGM_utf(const char *str, uint8_t n=LCD_WIDTH) {
 
   static void logo_lines(const char* const extra) {
     int16_t indent = (LCD_WIDTH - 8 - lcd_strlen_P(extra)) / 2;
-    lcd.setCursor(indent, 0); lcd.print('\x00'); lcd_printPGM(PSTR( "------" ));  lcd.write('\x01');
-    lcd.setCursor(indent, 1);                    lcd_printPGM(PSTR("|Marlin|"));  lcd_printPGM(extra);
-    lcd.setCursor(indent, 2); lcd.write('\x02'); lcd_printPGM(PSTR( "------" ));  lcd.write('\x03');
+    lcd.setCursor(indent, 0); lcd.print('\x00'); lcd_printPGM(PSTR( "______" ));  lcd.write('\x01');
+    lcd.setCursor(indent, 1);                    lcd_printPGM(PSTR("(AMCELL)"));  lcd_printPGM(extra);
+    lcd.setCursor(indent, 2); lcd.write('\x02'); lcd_printPGM(PSTR( "''''''" ));  lcd.write('\x03');
   }
 
   void lcd_bootscreen() {
@@ -721,61 +721,9 @@ static void lcd_implementation_status_screen() {
   //
 
   lcd.setCursor(0, 0);
+  lcd_printPGM(PSTR("AMCELL Triditive"));
 
-  #if LCD_WIDTH < 20
-
-    //
-    // Hotend 0 Temperature
-    //
-    _draw_heater_status(0, -1, blink);
-
-    //
-    // Hotend 1 or Bed Temperature
-    //
-    #if HOTENDS > 1 || TEMP_SENSOR_BED != 0
-
-      lcd.setCursor(8, 0);
-      #if HOTENDS > 1
-        lcd.print((char)LCD_STR_THERMOMETER[0]);
-        _draw_heater_status(1, -1, blink);
-      #else
-        lcd.print((char)LCD_BEDTEMP_CHAR);
-        _draw_heater_status(-1, -1, blink);
-      #endif
-
-    #endif // HOTENDS > 1 || TEMP_SENSOR_BED != 0
-
-  #else // LCD_WIDTH >= 20
-
-    //
-    // Hotend 0 Temperature
-    //
-    _draw_heater_status(0, LCD_STR_THERMOMETER[0], blink);
-
-    //
-    // Hotend 1 or Bed Temperature
-    //
-    #if HOTENDS > 1 || TEMP_SENSOR_BED != 0
-      lcd.setCursor(10, 0);
-      #if HOTENDS > 1
-        _draw_heater_status(1, LCD_STR_THERMOMETER[0], blink);
-      #else
-        _draw_heater_status(-1, LCD_BEDTEMP_CHAR, blink);
-      #endif
-
-    #endif // HOTENDS > 1 || TEMP_SENSOR_BED != 0
-
-  #endif // LCD_WIDTH >= 20
-
-  //
-  // Line 2
-  //
-
-  #if LCD_HEIGHT > 2
-
-    #if LCD_WIDTH < 20
-
-      #if ENABLED(SDSUPPORT)
+  /*
         lcd.setCursor(0, 2);
         lcd_printPGM(PSTR("SD"));
         if (IS_SD_PRINTING)
@@ -783,45 +731,34 @@ static void lcd_implementation_status_screen() {
         else
           lcd_printPGM(PSTR("---"));
           lcd.write('%');
-      #endif // SDSUPPORT
+       #endif // SDSUPPORT
+   */
 
-    #else // LCD_WIDTH >= 20
+    // Before homing the axis letters are blinking 'X' <-> '?'.
+    // When axis is homed but axis_known_position is false the axis letters are blinking 'X' <-> ' '.
+    // When everything is ok you see a constant 'X'.
 
-      lcd.setCursor(0, 1);
+    _draw_axis_label(X_AXIS, PSTR(MSG_X), blink);
+    lcd.print(ftostr4sign(LOGICAL_X_POSITION(current_position[X_AXIS])));
+    lcd.write(' ');
 
-      #if HOTENDS > 1 && TEMP_SENSOR_BED != 0
-
-        // If we both have a 2nd extruder and a heated bed,
-        // show the heated bed temp on the left,
-        // since the first line is filled with extruder temps
-      _draw_heater_status(-1, LCD_BEDTEMP_CHAR, blink);
-
-      #else
-        // Before homing the axis letters are blinking 'X' <-> '?'.
-        // When axis is homed but axis_known_position is false the axis letters are blinking 'X' <-> ' '.
-        // When everything is ok you see a constant 'X'.
-
-        _draw_axis_label(X_AXIS, PSTR(MSG_X), blink);
-        lcd.print(ftostr4sign(LOGICAL_X_POSITION(current_position[X_AXIS])));
-
-        lcd.write(' ');
-
-        _draw_axis_label(Y_AXIS, PSTR(MSG_Y), blink);
-        lcd.print(ftostr4sign(LOGICAL_Y_POSITION(current_position[Y_AXIS])));
-
-      #endif // HOTENDS > 1 || TEMP_SENSOR_BED != 0
-
-    #endif // LCD_WIDTH >= 20
+    _draw_axis_label(Y_AXIS, PSTR(MSG_Y), blink);
+    lcd.print(ftostr4sign(LOGICAL_Y_POSITION(current_position[Y_AXIS])));
 
     lcd.setCursor(LCD_WIDTH - 8, 1);
     _draw_axis_label(Z_AXIS, PSTR(MSG_Z), blink);
     lcd.print(ftostr52sp(FIXFLOAT(current_position[Z_AXIS])));
 
-    #if HAS_LEVELING
-      lcd.write(planner.leveling_active || blink ? '_' : ' ');
-    #endif
+    lcd.setCursor(0, 1);
 
-  #endif // LCD_HEIGHT > 2
+    float position = stepper.get_axis_position_mm(Z_AXIS);
+    long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM) - RESERVED_BEDS);
+
+    lcd_printPGM(PSTR("BEDS: "));
+    lcd.print(itostr3(beds));
+
+    lcd_printPGM(PSTR("MM: "));
+    lcd.print(ftostr52sp(FIXFLOAT(position)));
 
   //
   // Line 3
@@ -835,7 +772,7 @@ static void lcd_implementation_status_screen() {
     lcd.write('%');
 
     #if LCD_WIDTH >= 20 && ENABLED(SDSUPPORT)
-
+    /*
       lcd.setCursor(7, 2);
       lcd_printPGM(PSTR("SD"));
       if (IS_SD_PRINTING)
@@ -843,7 +780,7 @@ static void lcd_implementation_status_screen() {
       else
         lcd_printPGM(PSTR("---"));
       lcd.write('%');
-
+    */
     #endif // LCD_WIDTH >= 20 && SDSUPPORT
 
     char buffer[10];
