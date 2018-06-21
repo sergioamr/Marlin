@@ -185,6 +185,7 @@ void Endstops::report_state() {
     #define ENDSTOP_HIT_TEST_X() _ENDSTOP_HIT_TEST(X,'X')
     #define ENDSTOP_HIT_TEST_Y() _ENDSTOP_HIT_TEST(Y,'Y')
     #define ENDSTOP_HIT_TEST_Z() _ENDSTOP_HIT_TEST(Z,'Z')
+	#define ENDSTOP_HIT_TEST_E() _ENDSTOP_HIT_TEST(E,'E')
 
     SERIAL_ECHO_START();
     SERIAL_ECHOPGM(MSG_ENDSTOPS_HIT);
@@ -198,9 +199,9 @@ void Endstops::report_state() {
     #endif
     SERIAL_EOL();
 
-    #if ENABLED(ULTRA_LCD)
+    //#if ENABLED(ULTRA_LCD)
       lcd_status_printf_P(0, PSTR(MSG_LCD_ENDSTOPS " %c %c %c %c"), chrX, chrY, chrZ, chrP);
-    #endif
+    //#endif
 
     hit_on_purpose();
 
@@ -311,6 +312,7 @@ void Endstops::update() {
   // COPY_BIT: copy the value of SRC_BIT to DST_BIT in DST
   #define COPY_BIT(DST, SRC_BIT, DST_BIT) SET_BIT(DST, DST_BIT, TEST(DST, SRC_BIT))
 
+  // SERGIO UPDATE END STOP
   #define UPDATE_ENDSTOP(AXIS,MINMAX) do { \
       UPDATE_ENDSTOP_BIT(AXIS, MINMAX); \
       if (TEST_ENDSTOP(_ENDSTOP(AXIS, MINMAX)) && stepper.current_block->steps[_AXIS(AXIS)] > 0) { \
@@ -327,6 +329,10 @@ void Endstops::update() {
         if      (stepper.current_block->steps[_AXIS(X)] > 0) { _ENDSTOP_HIT(X, MIN); stepper.endstop_triggered(_AXIS(X)); }
         else if (stepper.current_block->steps[_AXIS(Y)] > 0) { _ENDSTOP_HIT(Y, MIN); stepper.endstop_triggered(_AXIS(Y)); }
         else if (stepper.current_block->steps[_AXIS(Z)] > 0) { _ENDSTOP_HIT(Z, MIN); stepper.endstop_triggered(_AXIS(Z)); }
+
+		// HACK SERGIO
+		//else if (stepper.current_block->steps[_AXIS(E)] > 0) { _ENDSTOP_HIT(X, MAX); stepper.endstop_triggered(_AXIS(E)); }
+
         G38_endstop_hit = true;
       }
     }
@@ -432,6 +438,7 @@ void Endstops::update() {
     }
     else { // +direction
       #if HAS_X_MAX
+		// SERGIO
         #if ENABLED(X_DUAL_ENDSTOPS)
           UPDATE_ENDSTOP_BIT(X, MAX);
           #if HAS_X2_MAX
