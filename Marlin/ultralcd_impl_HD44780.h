@@ -714,16 +714,16 @@ Possible status screens:
        |01234567890123456789|
 */
 static void lcd_implementation_status_screen() {
-  const bool blink = lcd_blink();
+    const bool blink = lcd_blink();
 
-  //
-  // Line 1
-  //
+    //
+    // Line 1
+    //
 
-  lcd.setCursor(0, 0);
-  lcd_printPGM(PSTR("AMCELL Triditive"));
+    lcd.setCursor(0, 0);
+    lcd_printPGM(PSTR("AMCELL Triditive"));
 
-  /*
+    /*
         lcd.setCursor(0, 2);
         lcd_printPGM(PSTR("SD"));
         if (IS_SD_PRINTING)
@@ -732,12 +732,13 @@ static void lcd_implementation_status_screen() {
           lcd_printPGM(PSTR("---"));
           lcd.write('%');
        #endif // SDSUPPORT
-   */
+    */
 
     // Before homing the axis letters are blinking 'X' <-> '?'.
     // When axis is homed but axis_known_position is false the axis letters are blinking 'X' <-> ' '.
     // When everything is ok you see a constant 'X'.
 
+    lcd.setCursor(0, 1);
     _draw_axis_label(X_AXIS, PSTR(MSG_X), blink);
     lcd.print(ftostr4sign(LOGICAL_X_POSITION(current_position[X_AXIS])));
     lcd.write(' ');
@@ -749,7 +750,7 @@ static void lcd_implementation_status_screen() {
     _draw_axis_label(Z_AXIS, PSTR(MSG_Z), blink);
     lcd.print(ftostr52sp(FIXFLOAT(current_position[Z_AXIS])));
 
-    lcd.setCursor(0, 1);
+    lcd.setCursor(0, 2);
 
     float position = stepper.get_axis_position_mm(Z_AXIS);
     long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM) - RESERVED_BEDS);
@@ -757,19 +758,12 @@ static void lcd_implementation_status_screen() {
     lcd_printPGM(PSTR("BEDS: "));
     lcd.print(itostr3(beds));
 
-    lcd_printPGM(PSTR("MM: "));
+    lcd_printPGM(PSTR(" MM: "));
     lcd.print(ftostr52sp(FIXFLOAT(position)));
 
   //
   // Line 3
   //
-
-  #if LCD_HEIGHT > 3
-
-    lcd.setCursor(0, 2);
-    lcd.print((char)LCD_FEEDRATE_CHAR);
-    lcd.print(itostr3(feedrate_percentage));
-    lcd.write('%');
 
     #if LCD_WIDTH >= 20 && ENABLED(SDSUPPORT)
     /*
@@ -783,15 +777,17 @@ static void lcd_implementation_status_screen() {
     */
     #endif // LCD_WIDTH >= 20 && SDSUPPORT
 
+    /*
     char buffer[10];
     duration_t elapsed = print_job_timer.duration();
     uint8_t len = elapsed.toDigital(buffer);
 
-    lcd.setCursor(LCD_WIDTH - len - 1, 2);
-    lcd.print((char)LCD_CLOCK_CHAR);
-    lcd_print(buffer);
-
-  #endif // LCD_HEIGHT > 3
+    if (elapsed > 0) {
+        lcd.setCursor(LCD_WIDTH - len - 1, 2);
+        lcd.print((char)LCD_CLOCK_CHAR);
+        lcd_print(buffer);
+    }
+    */
 
   //
   // Last Line
