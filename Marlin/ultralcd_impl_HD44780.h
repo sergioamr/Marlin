@@ -520,9 +520,10 @@ void lcd_printPGM_utf(const char *str, uint8_t n=LCD_WIDTH) {
 
   static void logo_lines(const char* const extra) {
     int16_t indent = (LCD_WIDTH - 8 - lcd_strlen_P(extra)) / 2;
-    lcd.setCursor(indent, 0); lcd.print('\x00'); lcd_printPGM(PSTR( "______" ));  lcd.write('\x01');
-    lcd.setCursor(indent, 1);                    lcd_printPGM(PSTR("(AMCELL)"));  lcd_printPGM(extra);
-    lcd.setCursor(indent, 2); lcd.write('\x02'); lcd_printPGM(PSTR( "''''''" ));  lcd.write('\x03');
+
+    lcd.setCursor(indent, 0); lcd.print('\x00'); lcd_printPGM(PSTR( ".----." ));  lcd.write('\x01');
+    lcd.setCursor(indent, 1);                    lcd_printPGM(PSTR("|AMCELL|"));  lcd_printPGM(extra);
+    lcd.setCursor(indent, 2); lcd.write('\x02'); lcd_printPGM(PSTR( "`----'" ));  lcd.write('\x03');
   }
 
   void lcd_bootscreen() {
@@ -690,29 +691,6 @@ FORCE_INLINE void _draw_heater_status(const int8_t heater, const char prefix, co
 
 #endif // LCD_PROGRESS_BAR
 
-/**
-Possible status screens:
-16x2   |000/000 B000/000|
-       |0123456789012345|
-
-16x4   |000/000 B000/000|
-       |SD100%  Z 000.00|
-       |F100%     T--:--|
-       |0123456789012345|
-
-20x2   |T000/000D B000/000D |
-       |01234567890123456789|
-
-20x4   |T000/000D B000/000D |
-       |X 000 Y 000 Z 000.00|
-       |F100%  SD100% T--:--|
-       |01234567890123456789|
-
-20x4   |T000/000D B000/000D |
-       |T000/000D   Z 000.00|
-       |F100%  SD100% T--:--|
-       |01234567890123456789|
-*/
 static void lcd_implementation_status_screen() {
     const bool blink = lcd_blink();
 
@@ -756,10 +734,18 @@ static void lcd_implementation_status_screen() {
     long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM) - RESERVED_BEDS);
 
     lcd_printPGM(PSTR("BEDS: "));
-    lcd.print(itostr3(beds));
+
+    if (!axis_homed[Z_AXIS])
+        lcd_printPGM(PSTR("???"));
+    else
+        lcd.print(itostr3(beds));
 
     lcd_printPGM(PSTR(" MM: "));
-    lcd.print(ftostr52sp(FIXFLOAT(position)));
+
+    if (!axis_homed[Z_AXIS])
+        lcd_printPGM(PSTR("     "));
+    else
+        lcd.print(ftostr52sp(FIXFLOAT(position)));
 
   //
   // Line 3

@@ -42,10 +42,10 @@
 #define TOTAL_BEDS_MM ((TOTAL_BEDS + RESERVED_BEDS) * BED_SIZE_MM)
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (7*60)
+#define HOMING_FEEDRATE_XY (10*60)
 
 // SERGIO
-#define HOMING_FEEDRATE_Z  (6*60)
+#define HOMING_FEEDRATE_Z  (40*60)
 
 
 /**
@@ -233,7 +233,7 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 20, 30, 7, 5 }
+#define DEFAULT_MAX_FEEDRATE          { 20, 30, 14, 5 }
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -393,7 +393,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS 200
 #define Y_MAX_POS 200
-#define Z_MAX_POS 208
+#define Z_MAX_POS 1000
 
 /**
  * Software Endstops
