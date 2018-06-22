@@ -44,9 +44,33 @@
 // Homing speeds (mm/m)
 #define HOMING_FEEDRATE_XY (10*60)
 
+#define HOMING_FEEDRATE_X (HOMING_FEEDRATE_XY/4)
+#define HOMING_FEEDRATE_Y HOMING_FEEDRATE_XY
+
 // SERGIO
 #define HOMING_FEEDRATE_Z  (40*60)
 
+/**
+ * Default Axis Steps Per Unit (steps/mm)
+ * Override with M92
+ *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
+ */
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 61, 200, 1570, 60 }
+
+/**
+ * Default Max Feed Rate (mm/s)
+ * Override with M203
+ *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
+ */
+#define DEFAULT_MAX_FEEDRATE          { 20, 30, 14, 5 }
+
+/**
+ * Default Max Acceleration (change/s) change = mm/s
+ * (Maximum start speed for accelerated moves)
+ * Override with M201
+ *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
+ */
+#define DEFAULT_MAX_ACCELERATION      { 10, 300, 100, 100 }
 
 /**
  * Select which serial port on the board will be used for communication with the host.
@@ -220,28 +244,6 @@
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
 //#define ENDSTOP_INTERRUPTS_FEATURE
-
-/**
- * Default Axis Steps Per Unit (steps/mm)
- * Override with M92
- *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
- */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 100, 80, 1570, 4000 }
-
-/**
- * Default Max Feed Rate (mm/s)
- * Override with M203
- *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
- */
-#define DEFAULT_MAX_FEEDRATE          { 20, 30, 14, 5 }
-
-/**
- * Default Max Acceleration (change/s) change = mm/s
- * (Maximum start speed for accelerated moves)
- * Override with M201
- *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
- */
-#define DEFAULT_MAX_ACCELERATION      { 10, 300, 100, 100 }
 
 /**
  * Default Acceleration (change/s) change = mm/s

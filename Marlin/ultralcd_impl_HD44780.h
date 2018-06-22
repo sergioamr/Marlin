@@ -716,6 +716,7 @@ static void lcd_implementation_status_screen() {
     // When axis is homed but axis_known_position is false the axis letters are blinking 'X' <-> ' '.
     // When everything is ok you see a constant 'X'.
 
+    // SERGIO
     lcd.setCursor(0, 1);
     _draw_axis_label(X_AXIS, PSTR(MSG_X), blink);
     lcd.print(ftostr4sign(LOGICAL_X_POSITION(current_position[X_AXIS])));
@@ -735,14 +736,14 @@ static void lcd_implementation_status_screen() {
 
     lcd_printPGM(PSTR("BEDS: "));
 
-    if (!axis_homed[Z_AXIS])
+    if (!axis_homed[Z_AXIS] || position<=0)
         lcd_printPGM(PSTR("???"));
     else
         lcd.print(itostr3(beds));
 
     lcd_printPGM(PSTR(" MM: "));
 
-    if (!axis_homed[Z_AXIS])
+    if (!axis_homed[Z_AXIS] || position<=0)
         lcd_printPGM(PSTR("     "));
     else
         lcd.print(ftostr52sp(FIXFLOAT(position)));

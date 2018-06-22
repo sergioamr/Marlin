@@ -423,7 +423,7 @@ static const float homing_feedrate_mm_s[] PROGMEM = {
   #if ENABLED(DELTA)
     MMM_TO_MMS(HOMING_FEEDRATE_Z), MMM_TO_MMS(HOMING_FEEDRATE_Z),
   #else
-    MMM_TO_MMS(HOMING_FEEDRATE_XY), MMM_TO_MMS(HOMING_FEEDRATE_XY),
+    MMM_TO_MMS(HOMING_FEEDRATE_X), MMM_TO_MMS(HOMING_FEEDRATE_Y),
   #endif
   MMM_TO_MMS(HOMING_FEEDRATE_Z), 0
 };
@@ -1097,6 +1097,7 @@ inline void get_serial_commands() {
         if (strcmp(command, "M112") == 0) kill(PSTR(MSG_KILLED));
         if (strcmp(command, "M410") == 0) { quickstop_stepper(); }
       #endif
+      if (strcmp(command, "M112") == 0) kill(PSTR(MSG_KILLED));
 
       #if defined(NO_TIMEOUTS) && NO_TIMEOUTS > 0
         last_command_time = ms;
@@ -7707,6 +7708,8 @@ inline void gcode_M105() {
 
 #endif
 
+inline void gcode_M112() { kill(PSTR(MSG_KILLED)); }
+
 /**
  * M109: Sxxx Wait for extruder(s) to reach temperature. Waits only when heating.
  *       Rxxx Wait for extruder(s) to reach temperature. Waits when heating and cooling.
@@ -14261,9 +14264,9 @@ void kill(const char* lcd_msg) {
 
   suicide();
   while (1) {
-    #if ENABLED(USE_WATCHDOG)
-      watchdog_reset();
-    #endif
+    //#if ENABLED(USE_WATCHDOG)
+    //  watchdog_reset();
+    //#endif
   } // Wait for reset
 }
 
