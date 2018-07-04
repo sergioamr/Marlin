@@ -147,3 +147,5 @@ cmake-build-*
 .gcc-flags.json
 .tags
 *.tags1
+.vscode/.browse.c_cpp.db*
+.vscode/launch.json

@@ -56,7 +56,7 @@
 // Servos
 //
 #ifdef IS_RAMPS_13
-  #define SERVO0_PIN        7 // RAMPS_13 // Will conflict with BTN_EN2 on LCD_I2C_VIKI
+  #define SERVO0_PIN       11 // RAMPS_13 // Will conflict with BTN_EN2 on LCD_I2C_VIKI
 #else
   #define SERVO0_PIN       11
 #endif
@@ -252,7 +252,7 @@
 #endif
 
 // define digital pin 4 for the filament runout sensor. Use the RAMPS 1.4 digital input 4 on the servos connector
-#define FIL_RUNOUT_PIN      4
+//#define FIL_RUNOUT_PIN      4
 
 #ifndef PS_ON_PIN
   #define PS_ON_PIN        12
