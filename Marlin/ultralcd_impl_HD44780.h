@@ -738,11 +738,14 @@ static void lcd_implementation_status_screen() {
     lcd.setCursor(0, 2);
 
     float position = stepper.get_axis_position_mm(Z_AXIS);
+    if (position <= 0)
+        position = stepper.get_axis_position_triggersteps_mm(Z_AXIS);
+
     long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM) - RESERVED_BEDS);
 
     lcd_printPGM(PSTR("Beds: "));
 
-    if (!axis_homed[Z_AXIS] || position<=0)
+    if (position<=0)
         lcd_printPGM(PSTR("???"));
     else
         lcd.print(itostr3(beds));

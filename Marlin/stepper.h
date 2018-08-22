@@ -222,6 +222,12 @@ class Stepper {
     static float get_axis_position_mm(const AxisEnum axis);
 
     //
+    // Get the position (mm) of an axis based on when the trigger happeneds
+    //
+    // SERGIO
+    static float get_axis_position_triggersteps_mm(const AxisEnum axis);
+
+    //
     // SCARA AB axes are in degrees, not mm
     //
     #if IS_SCARA

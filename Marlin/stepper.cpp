@@ -1206,6 +1206,11 @@ long Stepper::position(const AxisEnum axis) {
   return count_pos;
 }
 
+
+float Stepper::get_axis_position_triggersteps_mm(const AxisEnum axis) {
+    return endstops_trigsteps[axis] * planner.steps_to_mm[axis];
+}
+
 /**
  * Get an axis position according to stepper position(s)
  * For CORE machines apply translation from ABC to XYZ.

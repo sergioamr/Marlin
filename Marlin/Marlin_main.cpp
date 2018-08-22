@@ -8329,6 +8329,11 @@ void report_current_position() {
   SERIAL_PROTOCOLPGM(" E:");
   SERIAL_PROTOCOL(current_position[E_AXIS]);
 
+  SERIAL_PROTOCOLPGM(" BEDS:");
+  float position = stepper.get_axis_position_triggersteps_mm(Z_AXIS);
+  long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM) - RESERVED_BEDS);
+  SERIAL_PROTOCOL(beds);
+
   stepper.report_positions();
 
   #if IS_SCARA
