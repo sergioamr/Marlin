@@ -692,7 +692,7 @@ FORCE_INLINE void _draw_heater_status(const int8_t heater, const char prefix, co
 #endif // LCD_PROGRESS_BAR
 
 static void lcd_implementation_status_screen() {
-    const bool blink = lcd_blink();
+    //const bool blink = lcd_blink();
 
     //
     // Line 1
@@ -718,30 +718,36 @@ static void lcd_implementation_status_screen() {
 
     // SERGIO
     lcd.setCursor(0, 1);
-    _draw_axis_label(X_AXIS, PSTR(MSG_X), blink);
-    lcd.print(ftostr4sign(LOGICAL_X_POSITION(current_position[X_AXIS])));
-    lcd.write(' ');
 
-    _draw_axis_label(Y_AXIS, PSTR(MSG_Y), blink);
-    lcd.print(ftostr4sign(LOGICAL_Y_POSITION(current_position[Y_AXIS])));
+    lcd_printPGM(PSTR("Led "));
+    lcd.print(itostr3(fanSpeeds[0]));
+    //lcd_printPGM(PSTR(" P "));
+    //lcd.print(itostr3(FAN_PIN));
 
-    lcd.setCursor(LCD_WIDTH - 8, 1);
-    _draw_axis_label(Z_AXIS, PSTR(MSG_Z), blink);
-    lcd.print(ftostr52sp(FIXFLOAT(current_position[Z_AXIS])));
+    //_draw_axis_label(X_AXIS, PSTR(MSG_X), blink);
+    //lcd.print(ftostr4sign(LOGICAL_X_POSITION(current_position[X_AXIS])));
+    //lcd.write(' ');
+
+    //_draw_axis_label(Y_AXIS, PSTR(MSG_Y), blink);
+    //lcd.print(ftostr4sign(LOGICAL_Y_POSITION(current_position[Y_AXIS])));
+
+    //lcd.setCursor(LCD_WIDTH - 8, 1);
+    //_draw_axis_label(Z_AXIS, PSTR(MSG_Z), blink);
+    //lcd.print(ftostr52sp(FIXFLOAT(current_position[Z_AXIS])));
 
     lcd.setCursor(0, 2);
 
     float position = stepper.get_axis_position_mm(Z_AXIS);
     long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM) - RESERVED_BEDS);
 
-    lcd_printPGM(PSTR("BEDS: "));
+    lcd_printPGM(PSTR("Beds: "));
 
     if (!axis_homed[Z_AXIS] || position<=0)
         lcd_printPGM(PSTR("???"));
     else
         lcd.print(itostr3(beds));
 
-    lcd_printPGM(PSTR(" MM: "));
+    lcd_printPGM(PSTR(" mm: "));
 
     if (!axis_homed[Z_AXIS] || position<=0)
         lcd_printPGM(PSTR("     "));
