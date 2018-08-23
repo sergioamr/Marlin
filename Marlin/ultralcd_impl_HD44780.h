@@ -28,6 +28,7 @@
  * These are the most common LCD character displays.
  */
 
+#include "endstops.h"
 #include "utility.h"
 #include "duration_t.h"
 
@@ -719,7 +720,7 @@ static void lcd_implementation_status_screen() {
     // SERGIO
     lcd.setCursor(0, 1);
 
-    lcd_printPGM(PSTR("Led "));
+    lcd_printPGM(PSTR("Db "));
     lcd.print(itostr3(fanSpeeds[0]));
     //lcd_printPGM(PSTR(" P "));
     //lcd.print(itostr3(FAN_PIN));
@@ -730,6 +731,32 @@ static void lcd_implementation_status_screen() {
 
     //_draw_axis_label(Y_AXIS, PSTR(MSG_Y), blink);
     //lcd.print(ftostr4sign(LOGICAL_Y_POSITION(current_position[Y_AXIS])));
+
+    lcd.print(' ');
+
+    //if (endstops.endstop_hit_bits)
+    //lcd.print(itostr3(endstops.current_endstop_bits));
+
+    lcd.print("Z");
+    if (!digitalRead(Z_MIN_PIN))
+        lcd.print("-"); else lcd.print("_");
+
+    if (!digitalRead(Z_MAX_PIN))
+        lcd.print("+"); else lcd.print("_");
+
+    lcd.print("Y");
+    if (!digitalRead(Y_MIN_PIN))
+        lcd.print("-"); else lcd.print("_");
+
+    if (!digitalRead(Y_MAX_PIN))
+        lcd.print("+"); else lcd.print("_");
+
+    lcd.print("X");
+    if (!digitalRead(X_MIN_PIN))
+       lcd.print("-"); else lcd.print("_");
+
+    if (!digitalRead(X_MAX_PIN))
+       lcd.print("+"); else lcd.print("_");
 
     //lcd.setCursor(LCD_WIDTH - 8, 1);
     //_draw_axis_label(Z_AXIS, PSTR(MSG_Z), blink);
@@ -750,12 +777,12 @@ static void lcd_implementation_status_screen() {
     else
         lcd.print(itostr3(beds));
 
-    lcd_printPGM(PSTR(" mm: "));
+    //lcd_printPGM(PSTR(" mm: "));
 
-    if (!axis_homed[Z_AXIS] || position<=0)
-        lcd_printPGM(PSTR("     "));
-    else
-        lcd.print(ftostr52sp(FIXFLOAT(position)));
+    //if (!axis_homed[Z_AXIS] || position<=0)
+    //    lcd_printPGM(PSTR("     "));
+    //else
+    //    lcd.print(ftostr52sp(FIXFLOAT(position)));
 
   //
   // Line 3

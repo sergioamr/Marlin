@@ -147,6 +147,7 @@ uint16_t Stepper::OCR1A_nominal,
          Stepper::acc_step_rate; // needed for deceleration start point
 
 volatile long Stepper::endstops_trigsteps[XYZ];
+volatile long Stepper::endstops_max_trigsteps[XYZ];
 
 #if ENABLED(X_DUAL_ENDSTOPS) || ENABLED(Y_DUAL_ENDSTOPS) || ENABLED(Z_DUAL_ENDSTOPS)
   #define LOCKED_X_MOTOR  locked_x_motor
@@ -1208,7 +1209,7 @@ long Stepper::position(const AxisEnum axis) {
 
 
 float Stepper::get_axis_position_triggersteps_mm(const AxisEnum axis) {
-    return endstops_trigsteps[axis] * planner.steps_to_mm[axis];
+    return endstops_max_trigsteps[axis] * planner.steps_to_mm[axis];
 }
 
 /**
@@ -1267,6 +1268,12 @@ void Stepper::endstop_triggered(AxisEnum axis) {
     endstops_trigsteps[axis] = count_position[axis];
 
   #endif // !COREXY && !COREXZ && !COREYZ
+
+  // SERGIO
+  if (count_direction[axis] > 0) {
+      endstops_max_trigsteps[axis] = endstops_trigsteps[axis];
+  }
+
 
   kill_current_block();
   cleaning_buffer_counter = -1; // Discard the rest of the move

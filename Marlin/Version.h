@@ -35,7 +35,7 @@
   /**
    * Marlin release version identifier
    */
-  #define SHORT_BUILD_VERSION "2.2.0 Beds"
+  #define SHORT_BUILD_VERSION "2.2.1 MAX"
 
   /**
    * Verbose version identifier which should contain a reference to the location

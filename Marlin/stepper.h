@@ -144,6 +144,9 @@ class Stepper {
                     acc_step_rate; // needed for deceleration start point
 
     static volatile long endstops_trigsteps[XYZ];
+
+    // SERGIO
+    static volatile long endstops_max_trigsteps[XYZ];
     static volatile long endstops_stepsTotal, endstops_stepsDone;
 
     //
