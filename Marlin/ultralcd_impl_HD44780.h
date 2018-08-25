@@ -758,10 +758,6 @@ static void lcd_implementation_status_screen() {
     if (!digitalRead(X_MAX_PIN))
        lcd.print("+"); else lcd.print("_");
 
-    //lcd.setCursor(LCD_WIDTH - 8, 1);
-    //_draw_axis_label(Z_AXIS, PSTR(MSG_Z), blink);
-    //lcd.print(ftostr52sp(FIXFLOAT(current_position[Z_AXIS])));
-
     lcd.setCursor(0, 2);
 
     float position = stepper.get_axis_position_mm(Z_AXIS);
@@ -776,6 +772,12 @@ static void lcd_implementation_status_screen() {
         lcd_printPGM(PSTR("???"));
     else
         lcd.print(itostr3(beds));
+
+    lcd_printPGM(PSTR(" "));
+    if (IS_SD_PRINTING)
+        lcd.print("BUSY");
+    else
+        lcd.print("    ");
 
     //lcd_printPGM(PSTR(" mm: "));
 
