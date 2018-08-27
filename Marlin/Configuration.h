@@ -48,7 +48,7 @@
 #define HOMING_FEEDRATE_Y HOMING_FEEDRATE_XY
 
 // SERGIO
-#define HOMING_FEEDRATE_Z  (40*60)
+#define HOMING_FEEDRATE_Z  (500)
 
 /**
  * Default Axis Steps Per Unit (steps/mm)
@@ -70,7 +70,7 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 10, 300, 100, 100 }
+#define DEFAULT_MAX_ACCELERATION      { 10, 300, 10, 100 }
 
 /**
  * Select which serial port on the board will be used for communication with the host.
