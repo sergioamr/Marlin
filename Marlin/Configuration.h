@@ -48,7 +48,7 @@
 #define HOMING_FEEDRATE_Y HOMING_FEEDRATE_XY
 
 // SERGIO
-#define HOMING_FEEDRATE_Z  (500)
+#define HOMING_FEEDRATE_Z  (600)
 
 /**
  * Default Axis Steps Per Unit (steps/mm)
