@@ -764,7 +764,9 @@ static void lcd_implementation_status_screen() {
     if (position <= 0)
         position = stepper.get_axis_position_triggersteps_mm(Z_AXIS);
 
-    long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM) - RESERVED_BEDS);
+    long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM));
+    if (beds <= 0)
+        position = 0;
 
     lcd_printPGM(PSTR("Beds: "));
 

@@ -37,8 +37,8 @@
 // AMCELL STEPPER CONFIGURATION
 
 #define BED_SIZE_MM 4.0
-#define TOTAL_BEDS (55)
-#define RESERVED_BEDS 4
+#define TOTAL_BEDS (58)
+#define RESERVED_BEDS 0
 #define TOTAL_BEDS_MM ((TOTAL_BEDS + RESERVED_BEDS) * BED_SIZE_MM)
 
 // Homing speeds (mm/m)

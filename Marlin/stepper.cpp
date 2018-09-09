@@ -54,6 +54,43 @@
 #include "cardreader.h"
 #include "speed_lookuptable.h"
 
+//-----------------
+// SERGIO
+#define EEPROM_OFFSET 100
+#define EEPROM_START() int eeprom_index = EEPROM_OFFSET
+#define EEPROM_WRITE(VAR) write_data(eeprom_index, (uint8_t*)&VAR, sizeof(VAR))
+#define EEPROM_READ(VAR) read_data(eeprom_index, (uint8_t*)&VAR, sizeof(VAR))
+
+void write_data(int &pos, const uint8_t *value, uint16_t size) {
+  while (size--) {
+    uint8_t * const p = (uint8_t * const)pos;
+    uint8_t v = *value;
+    // EEPROM has only ~100,000 write cycles,
+    // so only write bytes that have changed!
+    if (v != eeprom_read_byte(p)) {
+      eeprom_write_byte(p, v);
+      if (eeprom_read_byte(p) != v) {
+        SERIAL_ECHO_START();
+        SERIAL_ECHOLNPGM(MSG_ERR_EEPROM_WRITE);
+        return;
+      }
+    }
+    pos++;
+    value++;
+  };
+}
+
+void read_data(int &pos, uint8_t* value, uint16_t size) {
+  do {
+    uint8_t c = eeprom_read_byte((unsigned char*)pos);
+    *value = c;
+    pos++;
+    value++;
+  } while (--size);
+}
+
+//-----------------
+
 #if ENABLED(AUTO_BED_LEVELING_UBL) && ENABLED(ULTIPANEL)
   #include "ubl.h"
 #endif
@@ -1209,7 +1246,11 @@ long Stepper::position(const AxisEnum axis) {
 
 
 float Stepper::get_axis_position_triggersteps_mm(const AxisEnum axis) {
-    return endstops_max_trigsteps[axis] * planner.steps_to_mm[axis];
+    long endstops_trigsteps = 0;
+    EEPROM_START();
+    EEPROM_READ(endstops_trigsteps);
+    //endstops_max_trigsteps[axis]
+    return endstops_trigsteps * planner.steps_to_mm[axis];
 }
 
 /**
@@ -1272,8 +1313,10 @@ void Stepper::endstop_triggered(AxisEnum axis) {
   // SERGIO
   if (count_direction[axis] > 0) {
       endstops_max_trigsteps[axis] = endstops_trigsteps[axis];
-  }
 
+      EEPROM_START();
+      EEPROM_WRITE(endstops_max_trigsteps[axis]);
+  }
 
   kill_current_block();
   cleaning_buffer_counter = -1; // Discard the rest of the move
