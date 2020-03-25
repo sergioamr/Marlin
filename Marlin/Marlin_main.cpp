@@ -8334,6 +8334,9 @@ void report_current_position() {
   long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM));
   SERIAL_PROTOCOL(beds);
 
+  SERIAL_PROTOCOLPGM(" STEPS_MM:");
+  SERIAL_PROTOCOL((long) position);
+
   stepper.report_positions();
 
   #if IS_SCARA
