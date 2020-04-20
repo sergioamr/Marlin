@@ -8329,12 +8329,12 @@ void report_current_position() {
   SERIAL_PROTOCOLPGM(" E:");
   SERIAL_PROTOCOL(current_position[E_AXIS]);
 
-  SERIAL_PROTOCOLPGM(" BEDS:");
+  SERIAL_PROTOCOLPGM(" STEPS_MM:");
   float position = stepper.get_axis_position_triggersteps_mm(Z_AXIS);
   long beds = (long) (((TOTAL_BEDS_MM - position) / BED_SIZE_MM));
   SERIAL_PROTOCOL(beds);
 
-  SERIAL_PROTOCOLPGM(" STEPS_MM:");
+  SERIAL_PROTOCOLPGM(" :");
   SERIAL_PROTOCOL((long) position);
 
   stepper.report_positions();
